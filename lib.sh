@@ -6,7 +6,7 @@ relax() {
   local body="$(type $f | tail +3)"
   local impl="${f}_impl"
   local n=0
-  while echo $body | grep "\$$((n+1))"; do n=$((n+1)); done
+  while echo $body | grep "\$$((n+1))" > /dev/null ; do n=$((n+1)); done
 
   eval "$f() {
   case \$# in
@@ -30,6 +30,130 @@ str::eq() {
   [ "$(cat)" == "$1" ]
 }
 relax str::eq
+
+str::char_at() {
+  local s="$(cat)"
+  echo "${s:$1:$1}"
+}
+relax str::char_at
+
+str::char_code_at() {
+  local s="$(cat)"
+  LC_CTYPE=C printf '%d' "'$(str::char_at "$s" "$1")"
+}
+relax str::char_code_at
+
+str::ends_with() {
+  [[ "$(cat)" == *"$1" ]]
+}
+relax str::ends_with
+
+str::includes() {
+  [[ "$(cat)" == *"$1"* ]]
+}
+relax str::includes
+
+str::index_of() {
+  local s="$(cat)"
+  if str::eq "$1" ""; then
+    echo 0
+    return
+  fi
+  local prefix="${s%%$1*}"
+  if str::eq "$prefix" "$s"; then
+    echo -1
+    return
+  fi
+  str::length "$prefix"
+}
+relax str::index_of
+
+str::last_index_of() {
+
+  local s="$(cat)"
+  if str::eq "$1" ""; then
+    str::length "$s"
+    return
+  fi
+  local prefix="${s%$1*}"
+  if str::eq "$prefix" "$s"; then
+    echo -1
+    return
+  fi
+  str::length "$prefix"
+}
+relax str::last_index_of
+
+str::starts_with() {
+  [[ "$(cat)" == "$1"* ]]
+}
+relax str::starts_with
+
+str::substring() {
+  local s
+  if [[ "$#" == 3 || "$#" == 2 && ! "$1" =~ [[:digit]]+ ]]; then
+    s="$1"
+    shift
+  else
+    s="$(cat)"
+  fi
+  local end="${#s}"
+  if str::eq "$#" 2; then
+    end="$2"
+  fi
+  echo "${s:"$1":$(( "$end" - "$1" ))}"
+}
+
+str::to_lower_case() {
+  local s="$(cat)"
+  echo "${s,,}"
+}
+relax str::to_lower_case
+
+str::to_upper_case() {
+  local s="$(cat)"
+  echo "${s^^}"
+}
+relax str::to_upper_case
+
+str::trim() {
+  str::trim_start | str::trim_end
+}
+relax str::trim
+
+str::trim_end() {
+  local s="$(cat)"
+  local n="${#s}"
+  while [[ "${s:$n}" =~ ^[[:space:]]*$ ]]; do
+    if [[ $n == 0 ]]; then
+      echo ""
+      return
+    fi
+    n="$((n-1))"
+  done
+  echo "${s:0:$(($n + 1))}"
+}
+relax str::trim_end
+
+str::trim_start() {
+  local s="$(cat)"
+  local n=0
+  while [[ "${s:0:$n}" =~ ^[[:space:]]*$ ]]; do
+    if [[ $n == "${#s}" ]]; then
+      echo ""
+      return
+    fi
+    n=$((n+1))
+  done
+  echo "${s:$(($n - 1))}"
+}
+relax str::trim_start
+
+str::length() {
+  local s="$(cat)"
+  echo "${#s}"
+}
+relax str::length
 
 str::split() {
   tr "$1" '\n'
