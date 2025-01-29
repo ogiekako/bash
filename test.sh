@@ -70,4 +70,51 @@ str::length "" | str::eq 0
 str::length " " | str::eq 1
 str::length "abc" | str::eq 3
 
+declare -A m=( ['a']=1 ['b']=2 [' c ']=' 3 ' )
+declare -A s=( ['s']=t )
+map::has m a
+! map::has m b
+map::has m ' c '
+
+map::has s s
+map::clear s
+! map::has s s
+
+map::set s s t
+map::has s s
+map::delete s s
+! map::has s s
+map::set s s t
+map::get s s | str::eq t
+map::set s s u
+map::get s s | str::eq u
+
+map::keys m | sort | str::eq 'a
+b
+ c '
+map::values m | sort | str::eq '1
+2
+ 3 '
+
+map::size m | str::eq 3
+map::clear m
+map::size m | str::eq 0
+
+map::set m '
+x
+ x' ' y
+
+y'
+! map::has m x
+map::get m '
+x
+ x' | str::eq ' y
+
+y'
+map::size m | str::eq 1
+map::clear m
+map::size m | str::eq 0
+map::clear m
+map::size m | str::eq 0
+
 echo ok

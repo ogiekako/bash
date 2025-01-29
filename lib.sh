@@ -26,6 +26,8 @@ relax() {
 $impl() $body"
 }
 
+# str APIs
+
 str::eq() {
   [ "$(cat)" == "$1" ]
 }
@@ -187,5 +189,55 @@ str::snake_to_camel() {
   str::split "_" | str::capitalize | str::join '' | str::uncapitalize
 }
 relax str::snake_to_camel
+
+# map APIs
+
+map::new() {
+  echo "Use declare -A ; see https://www.gnu.org/software/bash/manual/bash.html#Arrays" >&2
+  return 1
+}
+
+map::clear() {
+  local __map_clear_key
+  eval "for __map_clear_key in \"\${!$1[@]}\"; do
+  map::delete $1 \"\${__map_clear_key}\"
+done
+"
+}
+
+map::delete() {
+  unset "$1[$2]"
+}
+
+map::get() {
+  eval "echo \"\${$1['$2']}\""
+}
+
+map::has() {
+  map::keys "$1" | {
+    while IFS= read -r s; do
+      if str::eq "$s" "$2"; then
+        return 0
+      fi
+    done
+    return 1
+  }
+}
+
+map::keys() {
+  eval "printf '%s\n' \"\${!$1[@]}\""
+}
+
+map::set() {
+  eval "$1['$2']='$3'"
+}
+
+map::values() {
+  eval "printf '%s\n' \"\${$1[@]}\""
+}
+
+map::size() {
+  eval "echo \"\${#$1[@]}\""
+}
 
 unset -f relax
