@@ -20,6 +20,13 @@ str::join 'a
 b' ':' | str::eq 'a:b'
 str::split a:b : | str::join : | str::eq a:b
 
+i=foo
+str::capitalize < /dev/null
+str::uncapitalize < /dev/null
+str::capitalize a | str::eq A
+str::uncapitalize A | str::eq a
+str::eq "$i" foo
+
 str::camel_to_snake fooBar | str::eq foo_bar
 str::snake_to_camel foo_bar_baz | str::eq fooBarBaz
 echo fooBarX | str::camel_to_snake | str::eq foo_bar_x
@@ -108,6 +115,9 @@ x
 
 y'
 ! map::has m x
+map::has m '
+x
+ x'
 map::get m '
 x
  x' | str::eq ' y

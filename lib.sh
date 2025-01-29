@@ -167,6 +167,7 @@ str::join() {
 relax str::join
 
 str::capitalize() {
+  local i
   while read -r i; do
     echo "${i^}"
   done
@@ -174,6 +175,7 @@ str::capitalize() {
 relax str::capitalize
 
 str::uncapitalize() {
+  local i
   while read -r i; do
     echo "${i,}"
   done
@@ -214,14 +216,7 @@ map::get() {
 }
 
 map::has() {
-  map::keys "$1" | {
-    while IFS= read -r s; do
-      if str::eq "$s" "$2"; then
-        return 0
-      fi
-    done
-    return 1
-  }
+  eval "[[ -v \"$1['$2']\" ]]"
 }
 
 map::keys() {
