@@ -33,7 +33,7 @@ relax str::eq
 
 str::char_at() {
   local s="$(cat)"
-  echo "${s:$1:$1}"
+  echo "${s:$1:1}"
 }
 relax str::char_at
 

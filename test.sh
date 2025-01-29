@@ -22,7 +22,9 @@ str::camel_to_snake fooBar | str::eq foo_bar
 str::snake_to_camel foo_bar_baz | str::eq fooBarBaz
 echo fooBarX | str::camel_to_snake | str::eq foo_bar_x
 
-str::char_at "abc" 1 | str::eq b
+str::char_at abc 0 | str::eq a
+str::char_at abc 1 | str::eq b
+str::char_at abc 2 | str::eq c
 
 str::char_code_at "abc" 1 | str::eq 98
 
