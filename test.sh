@@ -1,5 +1,7 @@
 #!/bin/bash -eux
 
+LC_ALL=C
+
 cd "$(dirname -- "$0")"
 source ./lib.sh
 
