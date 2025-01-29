@@ -69,7 +69,6 @@ str::index_of() {
 relax str::index_of
 
 str::last_index_of() {
-
   local s="$(cat)"
   if str::eq "$1" ""; then
     str::length "$s"
@@ -91,7 +90,7 @@ relax str::starts_with
 
 str::substring() {
   local s
-  if [[ "$#" == 3 || "$#" == 2 && ! "$1" =~ [[:digit]]+ ]]; then
+  if [[ "$#" == 3 || "$#" == 2 && ! "$1" =~ ^[[:digit:]]+$ ]]; then
     s="$1"
     shift
   else

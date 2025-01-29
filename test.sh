@@ -50,6 +50,8 @@ str::starts_with "abc" "a"
 str::substring "abc" 1 2 | str::eq b
 str::substring "abc" 3 3 | str::eq ""
 str::substring "abc" 1 | str::eq bc
+str::substring a12 1 | str::eq 12
+str::substring a12 1 2 | str::eq 1
 
 str::to_lower_case "AbCd " | str::eq "abcd "
 str::to_upper_case "AbCd " | str::eq "ABCD "
