@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-LC_ALL=C
+export LC_ALL=C
 
 cd "$(dirname -- "$0")"
 source ./lib.sh
@@ -91,12 +91,12 @@ map::get s s | str::eq t
 map::set s s u
 map::get s s | str::eq u
 
-map::keys m | sort | str::eq 'a
-b
- c '
-map::values m | sort | str::eq '1
-2
- 3 '
+map::keys m | sort | str::eq ' c 
+a
+b'
+map::values m | sort | str::eq ' 3 
+1
+2'
 
 map::size m | str::eq 3
 map::clear m
