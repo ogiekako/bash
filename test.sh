@@ -29,6 +29,12 @@ str::eq "$i" foo
 
 str::camel_to_snake fooBar | str::eq foo_bar
 str::snake_to_camel foo_bar_baz | str::eq fooBarBaz
+echo 'a_b
+c_d' | str::snake_to_camel | str::eq 'aB
+cD'
+echo 'aB
+cD' | str::camel_to_snake | str::eq 'a_b
+c_d'
 echo fooBarX | str::camel_to_snake | str::eq foo_bar_x
 
 str::char_at abc 0 | str::eq a

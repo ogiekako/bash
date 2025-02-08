@@ -12,9 +12,9 @@ relax() {
   case \$# in
     $n) '${impl}' \"\$@\";;
     $(($n+1))) {
-      local first=\"\$1\"
+      local __relax_first=\"\$1\"
       shift
-      echo \"\$first\" | '${impl}' \"\$@\"
+      echo \"\$__relax_first\" | '${impl}' \"\$@\"
     } ;;
     *) {
       echo \"Unexpected args: $f \$@\"
@@ -188,7 +188,11 @@ str::camel_to_snake() {
 relax str::camel_to_snake
 
 str::snake_to_camel() {
-  str::split "_" | str::capitalize | str::join '' | str::uncapitalize
+  local IFS=$'\n'
+  local __str_snake_to_camel_line
+  for __str_snake_to_camel_line in $(cat); do
+    str::split "$__str_snake_to_camel_line" "_" | str::capitalize | str::join '' | str::uncapitalize
+  done
 }
 relax str::snake_to_camel
 
